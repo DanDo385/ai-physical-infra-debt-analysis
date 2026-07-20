@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/ai_infra_financing_report.html" }
+  ]
+}
