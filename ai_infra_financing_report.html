@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="favicon.ico" sizes="any">
+<script>
+(function(){
+  try{
+    var embed=new URLSearchParams(location.search).get("embed")==="1"||window.self!==window.top;
+    if(embed) document.documentElement.dataset.embed="1";
+  }catch(e){}
+})();
+</script>
 <title>AI Infrastructure Financing: State of the Market</title>
 <style>
 :root{
@@ -196,6 +204,20 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
   .card{box-shadow:none}
   a{color:#111;text-decoration:none}
 }
+
+html[data-embed="1"] .top-actions{display:none!important}
+.top-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:10px}
+.agent-mode,.display-mode{display:flex;align-items:center;gap:8px}
+.agent-mode-label,.display-mode-label{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.agent-mode a{display:inline-flex;align-items:center;text-decoration:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 10px;font-weight:700;font-size:.78rem}
+.agent-mode a:hover{border-color:var(--accent);color:var(--accent)}
+.theme-toggle{display:flex;gap:6px}
+.theme-toggle button{width:34px;height:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:0;line-height:1}
+.theme-toggle button:hover,.theme-toggle button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+@media (max-width:720px){
+  .agent-mode-label,.display-mode-label{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -212,7 +234,20 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
     </div>
   </div>
   <div class="actions no-print">
-    <button class="btn" id="themeBtn">Dark mode</button>
+    <div class="top-actions" aria-label="Page tools">
+      <div class="agent-mode" aria-label="Agent-readable exports">
+        <span class="agent-mode-label">Agent Mode</span>
+        <a href="llms.txt" title="Open llms.txt">llms.txt</a>
+        <a href="agent.json" title="Open agent.json">agent.json</a>
+      </div>
+      <div class="display-mode">
+        <span class="display-mode-label">Display</span>
+        <div class="theme-toggle" role="group" aria-label="Color mode">
+          <button type="button" data-theme-choice="dark" aria-label="Use night mode" title="Night mode" aria-pressed="false">☾</button>
+          <button type="button" data-theme-choice="light" aria-label="Use day mode" title="Day mode" aria-pressed="true">☀</button>
+        </div>
+      </div>
+    </div>
     <button class="btn" onclick="window.print()">Print / PDF</button>
     <button class="btn" id="copyBtn">Copy summary</button>
   </div>
@@ -248,32 +283,141 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
 <section id="market">
   <div class="kicker">Section 1</div>
   <h2>Market size without false equivalence</h2>
-  <p class="lede">The bubble map gives the headline size comparison: area is proportional to dollar size, and hovering or clicking any bubble shows its basis of measurement. The paired bar charts then separate stocks and commitments from annual issuance, because those are not the same kind of number. Bar widths are computed from the values; the logarithmic default keeps small categories visible, and the linear toggle shows the honest disproportion.</p>
+  <p class="lede">Comparing peak subprime stock, or a six-year fiber buildout, to a single year of AI debt is not a useful signal. The charts below put the three buildouts on multi-year totals first, then show the AI path year by year through 2027 so the cumulative becomes visible. Debt issuance is kept separate from physical capex, because they answer different questions.</p>
+
   <div class="card chart-card" style="margin:14px 0 4px">
-    <div class="chart-title"><h3>The size of things: six markets, one scale</h3><span class="badge unverified">not apples-to-apples</span></div>
+    <div class="chart-title"><h3>Three buildouts, multi-year totals</h3><span class="badge base">like-for-like attempt</span></div>
     <div class="bubble-wrap" id="bubbleWrap">
-      <svg id="bubbleSvg" viewBox="0 0 960 462" role="img" aria-label="Bubble chart comparing market sizes: subprime mortgages 1.3 trillion dollars outstanding at the 2007 peak, telecom and fiber buildout roughly 750 billion cumulative, AI-related debt issuance roughly 200 billion in 2025, Beignet Meta project notes 27.3 billion, CoreWeave DDTL commitment capacity 27.1 billion, data-center securitization 27 billion issued in 2025"></svg>
+      <svg id="bubbleSvg" viewBox="0 0 960 462" role="img" aria-label="Bubble chart comparing three multi-year buildouts: peak U.S. subprime mortgages 1.3 trillion outstanding in 2007, telecom and fiber cumulative roughly 750 billion from 1996 to 2002, and AI data-center hyperscaler capex cumulative roughly 2.2 trillion for 2025 through 2027 estimates"></svg>
       <div class="btip" id="btip"></div>
     </div>
     <div class="bubble-legend" id="bubbleLegend"></div>
     <p class="small" id="bubbleDetail" style="margin:10px 0 4px">Click a bubble to pin its details here.</p>
-    <p class="scale-note">These categories mix an outstanding stock (subprime), cumulative multi-year capex (telecom), annual flows (AI debt issuance, data-center securitization), and commitment stocks (CoreWeave capacity, one Meta project). Comparing a stock with a flow understates the eventual AI number if issuance persists at current rates, and overstates it if issuance stalls. That is why the bar charts below keep the two kinds of number apart.</p>
+    <div class="chart" data-max="2200" style="margin-top:8px">
+      <div class="bar-row">
+        <div class="bar-label"><b>AI DC / hyperscaler capex</b><div class="small">Cumulative 2025 + 2026e + 2027e, physical buildout <span class="badge unverified">approx</span></div></div>
+        <div class="bar-track"><div class="bar-fill" data-val="2200"></div></div>
+        <div class="bar-value">~$2.2T</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><b>Peak U.S. subprime</b><div class="small">Outstanding stock at the 2007 peak, not cumulative spend <span class="badge unverified">unverified</span></div></div>
+        <div class="bar-track"><div class="bar-fill warn" data-val="1300"></div></div>
+        <div class="bar-value">~$1.3T</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><b>Telecom / fiber buildout</b><div class="small">Cumulative capex + debt, 1996 to 2002 (~6 years) <span class="badge base">approx</span></div></div>
+        <div class="bar-track"><div class="bar-fill warn" data-val="750"></div></div>
+        <div class="bar-value">~$750B</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><b>AI-related debt issuance</b><div class="small">Cumulative 2025 + 2026e + 2027e, financing only <span class="badge base">approx</span></div></div>
+        <div class="bar-track"><div class="bar-fill violet" data-val="750"></div></div>
+        <div class="bar-value">~$0.6T to $0.9T</div>
+      </div>
+    </div>
+    <p class="scale-note">Read the AI capex bar as the physical analogue to fiber. Read the AI debt bar as the financing that sits under part of that buildout (much of hyperscaler spend is still equity-financed cash flow). Subprime remains a peak outstanding stock: useful for systemic scale, not as a spend total. On a three-year cumulative-capex basis, the AI buildout already clears both historical comparators; on a debt-only basis it does not.</p>
   </div>
+
+  <div class="card chart-card" style="margin:14px 0 4px">
+    <div class="chart-title"><h3>AI path through 2027: year by year, then cumulative</h3><span class="badge unverified">forward estimates</span></div>
+    <p class="small" style="margin:0 0 12px">Physical buildout (left) and debt financing (right). 2025 figures are realized-or-near-realized; 2026 and 2027 are Street estimates that will move with earnings guidance. Cumulatives are running totals, not annual rates.</p>
+    <div class="grid two">
+      <div>
+        <h4 style="margin:0 0 8px;font-family:var(--sans);font-size:.88rem">Hyperscaler / AI DC capex</h4>
+        <div class="chart" data-max="2200">
+          <div class="bar-row">
+            <div class="bar-label"><b>2025</b><div class="small">Big-5 aggregate, ~$380B <span class="badge unverified">approx</span></div></div>
+            <div class="bar-track"><div class="bar-fill" data-val="380"></div></div>
+            <div class="bar-value">~$380B</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>2026e</b><div class="small">Guidance cluster ~$625B to $725B, shown at $700B <span class="badge unverified">approx</span></div></div>
+            <div class="bar-track"><div class="bar-fill" data-val="700"></div></div>
+            <div class="bar-value">~$700B</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>2027e</b><div class="small">Goldman ~$1.1T (bull case to $1.4T) <span class="badge unverified">approx</span></div></div>
+            <div class="bar-track"><div class="bar-fill" data-val="1100"></div></div>
+            <div class="bar-value">~$1.1T</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>Cumulative through 2027e</b><div class="small">$380B + $700B + $1.1T <span class="badge analysis">derived</span></div></div>
+            <div class="bar-track"><div class="bar-fill good" data-val="2180"></div></div>
+            <div class="bar-value">~$2.2T</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 8px;font-family:var(--sans);font-size:.88rem">AI-related debt issuance</h4>
+        <div class="chart" data-max="900">
+          <div class="bar-row">
+            <div class="bar-label"><b>2025</b><div class="small">Broad AI-related debt, low hundreds of billions <span class="badge base">approx</span></div></div>
+            <div class="bar-track"><div class="bar-fill violet" data-val="200"></div></div>
+            <div class="bar-value">~$200B</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>2026e</b><div class="small">Base case: issuance grows with buildout; shown at $250B <span class="badge unverified">scenario</span></div></div>
+            <div class="bar-track"><div class="bar-fill violet" data-val="250"></div></div>
+            <div class="bar-value">~$250B</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>2027e</b><div class="small">Base case continues; shown at $300B <span class="badge unverified">scenario</span></div></div>
+            <div class="bar-track"><div class="bar-fill violet" data-val="300"></div></div>
+            <div class="bar-value">~$300B</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><b>Cumulative through 2027e</b><div class="small">Base path ~$750B; flat path ~$600B; fast path toward $1T <span class="badge analysis">scenario</span></div></div>
+            <div class="bar-track"><div class="bar-fill good" data-val="750"></div></div>
+            <div class="bar-value">~$750B</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap" style="margin-top:16px">
+      <table>
+        <thead>
+          <tr><th>Comparator</th><th>Window</th><th>What is measured</th><th>Total</th><th>Implication vs AI</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Telecom / fiber</strong></td>
+            <td>1996 to 2002</td>
+            <td>Cumulative capex + debt over ~6 years</td>
+            <td>~$0.5T to $1T (mid ~$750B)</td>
+            <td>AI physical capex over just three years already exceeds the midpoint, and may clear the top of the range by end-2027.</td>
+          </tr>
+          <tr>
+            <td><strong>U.S. subprime</strong></td>
+            <td>Peak 2007</td>
+            <td>Outstanding stock, not spend</td>
+            <td>~$1.3T</td>
+            <td>AI cumulative capex through 2027e (~$2.2T) is larger; AI cumulative debt through 2027e (~$0.6T to $0.9T) is still smaller.</td>
+          </tr>
+          <tr>
+            <td><strong>AI DC buildout</strong></td>
+            <td>2025 to 2027e</td>
+            <td>Hyperscaler / AI data-center capex (physical)</td>
+            <td>~$2.0T to $2.5T (mid ~$2.2T)</td>
+            <td>The relevant size question is no longer "is one year big?" It is whether funding, power, and demand keep this path intact.</td>
+          </tr>
+          <tr>
+            <td><strong>AI debt financing</strong></td>
+            <td>2025 to 2027e</td>
+            <td>Broad AI-related debt issuance (financing)</td>
+            <td>~$0.6T to $0.9T base</td>
+            <td>Still below both historical comparators on a debt-only basis. Capex is mostly equity-financed cash flow today; that mix can change.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scale-note">Capex path sources: 2025 ~$380B Big-5 aggregate from recent analyst summaries; 2026e ~$625B to $725B guidance cluster (shown at $700B); 2027e Goldman Sachs ~$1.1T with a bull case to $1.4T. Longer-horizon context (not charted): Goldman ~$5.3T hyperscaler capex 2025 to 2030; McKinsey ~$5.2T to $6.7T global data-center investment need by 2030. Debt 2026e/2027e figures are scenarios, not Street consensus prints. DC securitization alone is smaller: $27B in 2025 (KBRA), with JPMorgan / Bloomberg discussing $30B to $40B per year potential in 2026 to 2027.</p>
+  </div>
+
   <div style="margin:12px 0" class="no-print"><button class="btn" id="scaleBtn">Switch to linear scale</button> <span class="small" id="scaleNote">Currently: logarithmic display.</span></div>
   <div class="grid two">
     <div class="card chart-card">
-      <div class="chart-title"><h3>Stocks and commitment capacity</h3><span class="badge unverified">not directly comparable</span></div>
-      <div class="chart" data-max="1300">
-        <div class="bar-row">
-          <div class="bar-label"><b>Peak U.S. subprime mortgages</b><div class="small">Outstanding stock, 2007 <span class="badge unverified">unverified</span></div></div>
-          <div class="bar-track"><div class="bar-fill warn" data-val="1300"></div></div>
-          <div class="bar-value">$1.3T</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label"><b>Telecom / fiber buildout</b><div class="small">Cumulative capex + debt, 1996 to 2002, $0.5T to $1T range shown at midpoint <span class="badge base">approx</span></div></div>
-          <div class="bar-track"><div class="bar-fill warn" data-val="750"></div></div>
-          <div class="bar-value">~$750B</div>
-        </div>
+      <div class="chart-title"><h3>Issuer and ABS stocks (detail)</h3><span class="badge verified">components verified</span></div>
+      <div class="chart" data-max="30">
         <div class="bar-row">
           <div class="bar-label"><b>CoreWeave DDTL 1.0 to 5.0</b><div class="small">Identified commitment capacity <span class="badge verified">components verified</span></div></div>
           <div class="bar-track"><div class="bar-fill" data-val="27.1"></div></div>
@@ -289,11 +433,16 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
           <div class="bar-track"><div class="bar-fill good" data-val="23"></div></div>
           <div class="bar-value">&gt;$23B</div>
         </div>
+        <div class="bar-row">
+          <div class="bar-label"><b>Beignet / Meta project notes</b><div class="small">Single project's secured debt <span class="badge unverified">unverified</span></div></div>
+          <div class="bar-track"><div class="bar-fill violet" data-val="27.3"></div></div>
+          <div class="bar-value">$27.3B</div>
+        </div>
       </div>
-      <p class="scale-note">Commitment capacity includes undrawn amounts and is not balance-sheet debt: the verified 10-Q net total of $24.9B also includes ~$5.0B of OEM and software-license financing and predates full DDTL 5.0 drawdown. Peak subprime is an economy-wide stock, shown for scale context only.</p>
+      <p class="scale-note">These are issuer- and project-level stocks, not the buildout total. Commitment capacity includes undrawn amounts. The verified 10-Q net total of $24.9B also includes ~$5.0B of OEM and software-license financing and predates full DDTL 5.0 drawdown. One project (Beignet) now equals the entire 2025 securitization market.</p>
     </div>
     <div class="card chart-card">
-      <div class="chart-title"><h3>Annual issuance, 2025, plus one project for scale</h3><span class="badge base">flows vs one stock</span></div>
+      <div class="chart-title"><h3>2025 debt issuance detail</h3><span class="badge base">one-year flows</span></div>
       <div class="chart" data-max="200">
         <div class="bar-row">
           <div class="bar-label"><b>Broad AI-related debt issuance</b><div class="small">2025, "low hundreds of billions" shown at ~$200B <span class="badge base">approx</span></div></div>
@@ -311,20 +460,15 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
           <div class="bar-value">$27B</div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><b>Beignet / Meta project notes</b><div class="small">Single project's secured debt, a stock shown for scale only <span class="badge unverified">unverified</span></div></div>
-          <div class="bar-track"><div class="bar-fill violet" data-val="27.3"></div></div>
-          <div class="bar-value">$27.3B</div>
-        </div>
-        <div class="bar-row">
           <div class="bar-label"><b>S&amp;P-rated DC ABS issuance</b><div class="small">2025, narrower rated universe <span class="badge unverified">paywalled</span></div></div>
           <div class="bar-track"><div class="bar-fill warn" data-val="9.25"></div></div>
           <div class="bar-value">$9.25B</div>
         </div>
       </div>
-      <p class="scale-note">JPMorgan / Bloomberg coverage discussed data-center securitization reaching $30B to $40B per year in 2026 to 2027. The gap between KBRA's $27B and S&amp;P's $9.25B shows how "market size" moves with the measurement perimeter. One project (Beignet, purple) now equals the entire 2025 securitization market: single names are reaching systemic-attention size before the asset class does.</p>
+      <p class="scale-note">Kept as a detail panel, not the headline comparison. The gap between KBRA's $27B and S&amp;P's $9.25B shows how "market size" moves with the measurement perimeter.</p>
     </div>
   </div>
-  <div class="note"><b>What the numbers actually say.</b> AI infrastructure credit is already large enough to matter to investment-grade, high-yield, private-credit, project-finance, and structured-finance investors, and is compounding. It remains far smaller than the mortgage complex that entered 2008. But individual projects and issuer facilities are now large enough to create concentration, syndication, and refinancing problems on their own, and the outstanding stock of the whole complex is hard to measure with confidence, which is itself a risk flag.</div>
+  <div class="note"><b>What the numbers actually say.</b> On a cumulative physical-capex basis through 2027e, the AI data-center buildout is already in the same league as (and likely larger than) both the fiber boom and peak subprime stock. On a debt-only basis it is still smaller, because so much of the spend is still equity-financed cash flow. The credit question is therefore not "is the buildout small?" It is whether funding structure, holder quality, and contract durability hold up as the stock compounds and as more of the spend migrates into debt markets.</div>
 </section>
 
 <section id="ladder">
@@ -612,7 +756,8 @@ Indicative price ≈ 100 − 2.5 × (required spread − reference spread) ÷ 10
         <li>The model is a single-horizon stress test; real facilities carry covenants, reserves, and cure mechanics that improve outcomes versus this framework.</li>
         <li>FMV is assumed equal to cost at origination.</li>
         <li>Structural premium (125 bps) and spread duration (2.5) are fixed; the par anchor is a user choice among three observed prints.</li>
-        <li>Chart categories still mix stocks, flows, and commitments across panels; each bar states its basis.</li>
+        <li>Headline comparison uses multi-year cumulatives; one-year debt flows and issuer stocks are demoted to detail panels.</li>
+        <li>Forward 2026e/2027e figures are Street estimates or scenarios and are tagged as such; each bar states its basis.</li>
         <li>Paywalled or unfetched sources are tagged unverified throughout.</li>
         <li>No claim is made about any issuer's solvency. This is market-structure analysis, not investment advice.</li>
       </ul>
@@ -647,6 +792,7 @@ Indicative price ≈ 100 − 2.5 × (required spread − reference spread) ÷ 10
       <li><span class="badge base">research base</span> CoreWeave DDTL 3.0 (Jul. 2025)<div class="source-meta">$2.6B at SOFR + 4.00%, OpenAI-linked; from the supplied research base, consistent with the verified 10-Q carrying amount.</div></li>
       <li><span class="badge base">research base</span> DDTL 4.0 ratings and anchor<div class="source-meta">A3 / A(low) ratings and Blackstone Credit &amp; Insurance anchoring, per press coverage in the research base. Not in the 8-K text.</div></li>
       <li><span class="badge base">research base</span> Market aggregates<div class="source-meta">JPMorgan / Bloomberg coverage of data-center securitization at $30B to $40B per year potential for 2026 to 2027; 2025 AI-related debt issuance in the low hundreds of billions; GPU advance rates commonly 50% to 70% of FMV; three-year residual outcomes debated at roughly 10% to 60% of cost.</div></li>
+      <li><span class="badge unverified">unverified</span> Cumulative AI buildout path (2025 to 2027e)<div class="source-meta">Hyperscaler / AI DC capex: ~$380B (2025 Big-5 aggregate, analyst summaries), ~$625B to $725B (2026e guidance cluster, shown at $700B), ~$1.1T (2027e Goldman Sachs, bull case to $1.4T); derived cumulative midpoint ~$2.2T. Longer-horizon context: Goldman ~$5.3T hyperscaler capex 2025 to 2030; McKinsey ~$5.2T to $6.7T global data-center investment need by 2030. AI-related debt cumulative base path ~$750B assumes ~$200B / $250B / $300B across 2025 to 2027e (scenarios). Not independently verified line by line.</div></li>
       <li><span class="badge unverified">unverified</span> <a href="https://www.spglobal.com/ratings/en/regulatory/article/north-america-data-center-abs-roundup-second-quarter-2026-s101688078" target="_blank" rel="noopener">S&amp;P Global Ratings, North America Data Center ABS Roundup Q2 2026</a><div class="source-meta">More than $23B outstanding S&amp;P-rated U.S. DC ABS and $9.25B of 2025 rated issuance, Registration wall prevented direct verification.</div></li>
       <li><span class="badge unverified">unverified</span> Beignet Investor LLC (S&amp;P), Amazon 2025 10-K, NVIDIA capacity agreement 8-K, IMF GFSR Oct. 2007, Reuters hyperscaler bond coverage<div class="source-meta">$27.3B Meta / Blue Owl project notes; five-to-six-year server lives; $6.3B NVIDIA residual-capacity backstop through April 2032; ~$1.3T peak subprime estimate; ~$120B 2025 hyperscaler bond issuance. Not independently checked.</div></li>
       <li><span class="badge analysis">analysis</span> All model outputs, the funding-transmission framework, contract-tier hierarchy, crisis scores, and comparative judgments<div class="source-meta">Analytical constructions on the fact base, not observed market data.</div></li>
@@ -836,12 +982,24 @@ controlIds.forEach(function (id) {
 $("reference").addEventListener("change", function () { clearPreset(); compute(); });
 
 /* ---------- chrome ---------- */
-$("themeBtn").addEventListener("click", function () {
-  var root = document.documentElement;
-  var dark = root.getAttribute("data-theme") === "dark";
-  root.setAttribute("data-theme", dark ? "light" : "dark");
-  $("themeBtn").textContent = dark ? "Dark mode" : "Light mode";
-});
+function setTheme(mode){
+  var root=document.documentElement;
+  var next=mode==="dark"?"dark":"light";
+  root.setAttribute("data-theme", next==="dark"?"dark":"light");
+  document.querySelectorAll("[data-theme-choice]").forEach(function(btn){
+    btn.setAttribute("aria-pressed", btn.getAttribute("data-theme-choice")===next ? "true" : "false");
+  });
+  try{ localStorage.setItem("ai-infra-theme", next); }catch(e){}
+}
+(function initTheme(){
+  var saved=null;
+  try{ saved=localStorage.getItem("ai-infra-theme"); }catch(e){}
+  var prefersDark=window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  setTheme(saved || (prefersDark ? "dark" : "light"));
+  document.querySelectorAll("[data-theme-choice]").forEach(function(btn){
+    btn.addEventListener("click", function(){ setTheme(btn.getAttribute("data-theme-choice")); });
+  });
+})();
 $("copyBtn").addEventListener("click", function () {
   var text = $("summaryText").innerText;
   var done = function (ok) {
@@ -855,28 +1013,24 @@ $("copyBtn").addEventListener("click", function () {
 
 /* ---------- bubble map: area encodes dollar size ---------- */
 var BUBBLES = [
-  { name: "Peak U.S. subprime mortgages", short: "Subprime mortgages", v: 1300, disp: "~$1.3T", color: "#8a8fa0",
-    basis: "Outstanding stock at the 2007 peak. Widely cited estimate (IMF GFSR, Oct. 2007). Historical comparator, not independently verified.", status: "approx" },
-  { name: "Telecom / fiber buildout", short: "Telecom / fiber", v: 750, disp: "$0.5T to $1T", color: "#b0a488",
-    basis: "Cumulative capex and debt, 1996 to 2002, shown at the $750B midpoint of a widely cited range. Historical comparator.", status: "approx" },
-  { name: "AI-related debt issuance 2025", short: "AI debt 2025", v: 200, disp: "~$200B", color: "#0b5367",
-    basis: "Broad 2025 issuance, discussed in the low hundreds of billions. An annual flow, not an outstanding stock. 2026 hyperscaler funding needs are described as very large.", status: "approx" },
-  { name: "Beignet / Meta project notes", short: "", v: 27.3, disp: "$27.3B", color: "#514387",
-    basis: "Secured debt of one project (Meta / Blue Owl, Richland Parish) per S&P. A single project now equals the entire 2025 securitization market. Not independently verified.", status: "unverified" },
-  { name: "CoreWeave DDTL capacity", short: "", v: 27.1, disp: "$27.1B", color: "#9b3524",
-    basis: "Identified commitment capacity across DDTL 1.0 through 5.0. Verified 10-Q total debt was $24.9B net at Mar. 31, 2026, including non-DDTL obligations.", status: "components verified" },
-  { name: "Data-center securitization 2025", short: "", v: 27, disp: "$27B", color: "#286447",
-    basis: "2025 new issuance per KBRA, verified. JPMorgan / Bloomberg coverage discussed $30B to $40B per year potential for 2026 to 2027.", status: "verified" }
+  { name: "AI DC / hyperscaler capex (2025 to 2027e)", short: "AI DC capex", v: 2200, disp: "~$2.2T", color: "#0b5367",
+    basis: "Cumulative physical buildout: ~$380B (2025) + ~$700B (2026e) + ~$1.1T (2027e Goldman). Midpoint of a ~$2.0T to $2.5T range. Not independently verified; Street estimates will move with guidance.", status: "approx" },
+  { name: "Peak U.S. subprime mortgages", short: "Subprime", v: 1300, disp: "~$1.3T", color: "#8a8fa0",
+    basis: "Outstanding stock at the 2007 peak (IMF GFSR, Oct. 2007). A stock, not cumulative spend. Useful for systemic scale, not as a direct spend total.", status: "approx" },
+  { name: "Telecom / fiber buildout", short: "Telecom / fiber", v: 750, disp: "~$750B", color: "#b0a488",
+    basis: "Cumulative capex and debt, 1996 to 2002 (~6 years), midpoint of a widely cited $0.5T to $1T range. Closest physical-infrastructure analogue.", status: "approx" },
+  { name: "AI-related debt (2025 to 2027e)", short: "AI debt", v: 750, disp: "~$750B", color: "#514387",
+    basis: "Base-path cumulative financing: ~$200B (2025) + ~$250B (2026e) + ~$300B (2027e). Range ~$0.6T flat to ~$0.9T+ if issuance accelerates. Scenarios, not consensus prints.", status: "scenario" }
 ];
 function drawBubbles() {
-  var K = 4.1, baseY = 400, gap = 13, x = 12;
+  var K = 3.2, baseY = 400, gap = 18, x = 16;
   var svg = $("bubbleSvg"), parts = [];
   BUBBLES.forEach(function (b, i) {
     b.r = K * Math.sqrt(b.v);
     x += b.r; b.cx = x; b.cy = baseY - b.r; x += b.r + gap;
     parts.push('<circle data-i="' + i + '" cx="' + b.cx.toFixed(1) + '" cy="' + b.cy.toFixed(1) + '" r="' + b.r.toFixed(1) + '" fill="' + b.color + '" fill-opacity="0.85"><title>' + b.name + ", " + b.disp + "</title></circle>");
-    if (b.r > 45) {
-      var fs = b.r > 80 ? 15 : 12, fv = b.r > 80 ? 13 : 11;
+    if (b.r > 42) {
+      var fs = b.r > 90 ? 15 : 12, fv = b.r > 90 ? 13 : 11;
       parts.push('<text x="' + b.cx + '" y="' + (b.cy - 6) + '" text-anchor="middle" font-size="' + fs + '" font-weight="700" fill="#fff" pointer-events="none">' + b.short + "</text>");
       parts.push('<text x="' + b.cx + '" y="' + (b.cy + 13) + '" text-anchor="middle" font-size="' + fv + '" fill="#fff" pointer-events="none">' + b.disp + "</text>");
     } else {
@@ -884,10 +1038,10 @@ function drawBubbles() {
       parts.push('<text x="' + b.cx + '" y="' + (baseY + 22) + '" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65" pointer-events="none">' + b.disp + "</text>");
     }
   });
-  parts.push('<text x="12" y="450" font-size="11" fill="currentColor" opacity=".6">Bubble area is proportional to dollar size. Hover for basis of measurement; click to pin details.</text>');
+  parts.push('<text x="12" y="450" font-size="11" fill="currentColor" opacity=".6">Bubble area is proportional to dollar size on a multi-year basis. Hover for measurement basis; click to pin details.</text>');
   svg.innerHTML = parts.join("");
   $("bubbleLegend").innerHTML = BUBBLES.map(function (b, i) {
-    return '<span><span class="bdot" style="background:' + b.color + '"></span>' + (b.r <= 45 ? (i + 1) + ". " : "") + b.name + "</span>";
+    return '<span><span class="bdot" style="background:' + b.color + '"></span>' + (b.r <= 42 ? (i + 1) + ". " : "") + b.name + "</span>";
   }).join("");
   var tip = $("btip"), wrap = $("bubbleWrap");
   svg.addEventListener("mousemove", function (e) {
