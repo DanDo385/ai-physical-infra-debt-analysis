@@ -61,17 +61,18 @@ a{color:var(--accent);text-underline-offset:2px}
 button,input,select{font:inherit}
 button{cursor:pointer}
 .shell{max-width:1280px;margin:0 auto;padding:0 22px 90px}
-.masthead{padding:46px 0 26px;border-bottom:3px double var(--ink);display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start}
+.masthead{position:relative;padding:46px 0 26px;border-bottom:3px double var(--ink)}
+.masthead-copy{text-align:center;max-width:52rem;margin:0 auto;padding-top:8px}
 .kicker{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
 h1,h2,h3,h4{font-family:var(--serif);line-height:1.18;margin:0}
-h1{font-size:clamp(2rem,4.5vw,3.4rem);max-width:18ch}
+h1{font-size:clamp(2rem,4.5vw,3.4rem);max-width:18ch;margin-left:auto;margin-right:auto}
 h2{font-size:clamp(1.45rem,3vw,2.05rem)}
 h3{font-size:1.13rem}
 p{margin:.55rem 0 .9rem}
-.lede{max-width:72ch;color:var(--muted);font-size:1.04rem}
-.meta{display:flex;flex-wrap:wrap;gap:7px 18px;color:var(--muted);font-size:.82rem;margin-top:14px}
+.lede{max-width:48rem;margin-left:auto;margin-right:auto;color:var(--muted);font-size:1.04rem}
+.meta{display:flex;flex-wrap:wrap;gap:7px 18px;justify-content:center;color:var(--muted);font-size:.82rem;margin-top:14px}
 .meta b{color:var(--ink)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.masthead-utils{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
 .btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 12px;font-weight:700;font-size:.8rem}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
 .layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:32px}
@@ -182,8 +183,8 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
 }
 @media(max-width:760px){
   .shell{padding:0 14px 70px}
-  .masthead{grid-template-columns:1fr}
-  .actions{justify-content:flex-start}
+  .masthead{padding-top:58px}
+  .masthead-copy{padding-top:0}
   .grid.two,.grid.three,.contract-grid,.monitor{grid-template-columns:1fr}
   .controls{grid-template-columns:1fr}
   .outputs{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -198,7 +199,7 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
   :root{--bg:#fff;--paper:#fff;--ink:#111;--muted:#444;--line:#bbb;--shadow:none}
   body{font-size:11pt}
   .shell{max-width:none;padding:0}
-  aside,.actions,.no-print,.preset-bar,.lens-bar{display:none!important}
+  aside,.masthead-utils,.no-print,.preset-bar,.lens-bar{display:none!important}
   .layout{display:block}
   section{break-inside:avoid-page;margin-top:32px}
   .card{box-shadow:none}
@@ -206,15 +207,77 @@ footer{margin-top:70px;padding-top:20px;border-top:3px double var(--ink);font-si
 }
 
 html[data-embed="1"] .top-actions{display:none!important}
-.top-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:10px}
-.agent-mode,.display-mode{display:flex;align-items:center;gap:8px}
-.agent-mode-label,.display-mode-label{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.agent-mode a{display:inline-flex;align-items:center;text-decoration:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 10px;font-weight:700;font-size:.78rem}
+.top-actions{
+  position:absolute;
+  top:0;
+  right:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  max-width:min(520px,100%);
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  padding:8px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--paper);
+  box-shadow:var(--shadow);
+}
+.agent-mode{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding-right:8px;
+  border-right:1px solid var(--line);
+}
+.agent-mode-label,.display-mode-label{
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.agent-mode a{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:0 8px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:var(--bg);
+  color:var(--ink);
+  text-decoration:none;
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:700;
+}
 .agent-mode a:hover{border-color:var(--accent);color:var(--accent)}
-.theme-toggle{display:flex;gap:6px}
-.theme-toggle button{width:34px;height:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:0;line-height:1}
-.theme-toggle button:hover,.theme-toggle button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.display-mode{display:flex;align-items:center;gap:8px}
+.theme-toggle{display:flex;gap:8px}
+.theme-toggle button{
+  width:34px;
+  height:30px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:var(--paper);
+  color:var(--muted);
+  padding:0;
+  line-height:1;
+  font-family:var(--mono);
+  font-size:14px;
+  font-weight:700;
+}
+.theme-toggle button:hover,
+.theme-toggle button[aria-pressed="true"]{
+  color:var(--accent);
+  border-color:var(--accent);
+  background:var(--soft);
+}
 @media (max-width:720px){
+  .top-actions{gap:8px;padding:6px}
+  .agent-mode{padding-right:6px}
   .agent-mode-label,.display-mode-label{display:none}
 }
 
@@ -223,7 +286,21 @@ html[data-embed="1"] .top-actions{display:none!important}
 <body>
 <div class="shell">
 <header class="masthead">
-  <div>
+  <div class="top-actions no-print" aria-label="Page tools">
+    <div class="agent-mode" aria-label="Agent-readable exports">
+      <span class="agent-mode-label">Agent mode</span>
+      <a href="llms.txt" title="Open llms.txt">llms.txt</a>
+      <a href="agent.json" title="Open agent.json">agent.json</a>
+    </div>
+    <div class="display-mode">
+      <span class="display-mode-label">Display</span>
+      <div class="theme-toggle" role="group" aria-label="Color mode">
+        <button type="button" data-theme-choice="dark" aria-label="Use night mode" title="Night mode" aria-pressed="false">☾</button>
+        <button type="button" data-theme-choice="light" aria-label="Use day mode" title="Day mode" aria-pressed="true">☀</button>
+      </div>
+    </div>
+  </div>
+  <div class="masthead-copy">
     <div class="kicker">Research Report · AI Infrastructure Credit</div>
     <h1>AI Infrastructure Financing: State of the Market</h1>
     <p class="lede">GPU-backed term loans, data-center securitization, project-level debt, and the channels through which an AI capex slowdown could become a credit event. Every figure carries a provenance tag.</p>
@@ -232,24 +309,10 @@ html[data-embed="1"] .top-actions{display:none!important}
       <span><b>Method:</b> Primary sources fetched and checked where public; paywalled and unfetched items tagged</span>
       <span><b>Status:</b> Research framework, not investment advice</span>
     </div>
-  </div>
-  <div class="actions no-print">
-    <div class="top-actions" aria-label="Page tools">
-      <div class="agent-mode" aria-label="Agent-readable exports">
-        <span class="agent-mode-label">Agent Mode</span>
-        <a href="llms.txt" title="Open llms.txt">llms.txt</a>
-        <a href="agent.json" title="Open agent.json">agent.json</a>
-      </div>
-      <div class="display-mode">
-        <span class="display-mode-label">Display</span>
-        <div class="theme-toggle" role="group" aria-label="Color mode">
-          <button type="button" data-theme-choice="dark" aria-label="Use night mode" title="Night mode" aria-pressed="false">☾</button>
-          <button type="button" data-theme-choice="light" aria-label="Use day mode" title="Day mode" aria-pressed="true">☀</button>
-        </div>
-      </div>
+    <div class="masthead-utils no-print">
+      <button class="btn" onclick="window.print()">Print / PDF</button>
+      <button class="btn" id="copyBtn">Copy summary</button>
     </div>
-    <button class="btn" onclick="window.print()">Print / PDF</button>
-    <button class="btn" id="copyBtn">Copy summary</button>
   </div>
 </header>
 <div class="layout">
