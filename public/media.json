@@ -1,0 +1,25 @@
+{
+  "screenshots": [
+    "public/screenshots/01-title-and-thesis.png",
+    "public/screenshots/02-market-size-estimation.png",
+    "public/screenshots/03-coreweave-financing-ladder.png",
+    "public/screenshots/04-interactive-model-base-case.png",
+    "public/screenshots/05-model-bull-preset.png",
+    "public/screenshots/06-model-bear-preset.png",
+    "public/screenshots/07-abs-lens-view.png",
+    "public/screenshots/08-transmission-mechanisms.png",
+    "public/screenshots/09-crisis-comparison.png",
+    "public/screenshots/10-sources-and-verification.png"
+  ],
+  "previewGif": "public/gif/preview.gif",
+  "shortClip": {
+    "localPath": "public/demos/short/short.mp4",
+    "youtubeUrl": "https://www.youtube.com/watch?v=iameFULncF8",
+    "youtubeId": "iameFULncF8"
+  },
+  "detailedClip": {
+    "localPath": "public/demos/detailed/detailed.mp4",
+    "youtubeUrl": "https://www.youtube.com/watch?v=VM3f3d4pjOw",
+    "youtubeId": "VM3f3d4pjOw"
+  }
+}
