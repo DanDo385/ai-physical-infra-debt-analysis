@@ -1,5 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/ai_infra_financing_report.html" }
-  ]
+  "buildCommand": "rm -rf .vercel-out && mkdir -p .vercel-out && cp ai_infra_financing_report.html .vercel-out/index.html && cp favicon.ico agent.json llms.txt .vercel-out/ && cp -R public/. .vercel-out/",
+  "outputDirectory": ".vercel-out",
+  "cleanUrls": true
 }
